@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ chatbot_title }}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 21C7.5 17.5 4 14 4 9.8C4 6.6 6.4 4 9.4 4C10.9 4 12 4.8 12 4.8C12 4.8 13.1 4 14.6 4C17.6 4 20 6.6 20 9.8C20 14 16.5 17.5 12 21Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+          <path d="M12 9C12 9 12.5 6.5 15 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div>
+        <div class="brand-name">{{ chatbot_title }}</div>
+        <div class="brand-sub">{{ chatbot_subtitle }}</div>
+      </div>
+      <button class="sidebar-close" id="sidebarClose" aria-label="Close menu">&times;</button>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Explore topics</div>
+      <div class="category-list">
+        <button class="category-chip" data-prompt="Suggest a balanced meal plan for a full day.">
+          <span class="chip-icon">🍽️</span> Meal planning
+        </button>
+        <button class="category-chip" data-prompt="Explain macronutrients — protein, carbs, and fats — in simple terms.">
+          <span class="chip-icon">⚖️</span> Macronutrients
+        </button>
+        <button class="category-chip" data-prompt="What vitamins and minerals should I make sure I get daily?">
+          <span class="chip-icon">🥦</span> Vitamins &amp; minerals
+        </button>
+        <button class="category-chip" data-prompt="How much water should I drink every day?">
+          <span class="chip-icon">💧</span> Hydration
+        </button>
+        <button class="category-chip" data-prompt="What should I eat before and after a workout?">
+          <span class="chip-icon">🏃</span> Sports nutrition
+        </button>
+        <button class="category-chip" data-prompt="How do I read a nutrition label correctly?">
+          <span class="chip-icon">🏷️</span> Nutrition labels
+        </button>
+      </div>
+    </div>
+
+    <div class="sidebar-info-card">
+      <div class="info-card-title">Domain-locked assistant</div>
+      <p>This assistant only answers <strong>{{ chatbot_domain }}</strong>-related
+      questions and is not a substitute for professional medical advice.</p>
+    </div>
+  </aside>
+
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- ============ MAIN ============ -->
+  <main class="main">
+
+    <header class="topbar">
+      <button class="menu-btn" id="menuBtn" aria-label="Open menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+      <div class="topbar-title">
+        <span class="topbar-heading">{{ chatbot_title }}</span>
+        <span class="status"><span class="status-dot"></span>Ready</span>
+      </div>
+      <div class="topbar-spacer"></div>
+    </header>
+
+    <section class="chat-area" id="chatArea">
+      <div class="welcome" id="welcomeScreen">
+        <div class="welcome-icon">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 21C7.5 17.5 4 14 4 9.8C4 6.6 6.4 4 9.4 4C10.9 4 12 4.8 12 4.8C12 4.8 13.1 4 14.6 4C17.6 4 20 6.6 20 9.8C20 14 16.5 17.5 12 21Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+            <path d="M12 9C12 9 12.5 6.5 15 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h1>What are we eating well today?</h1>
+        <p>Ask me anything about nutrition — meal planning, macros, vitamins,
+        hydration, or healthy eating habits.</p>
+
+        <div class="suggestions">
+          <button class="suggestion-card" data-prompt="Give me a beginner-friendly healthy breakfast idea.">
+            <span>🥣</span> Give me a healthy breakfast idea
+          </button>
+          <button class="suggestion-card" data-prompt="How many calories should I eat per day?">
+            <span>🔥</span> How many calories should I eat?
+          </button>
+          <button class="suggestion-card" data-prompt="What are good sources of plant-based protein?">
+            <span>🌱</span> Plant-based protein sources
+          </button>
+          <button class="suggestion-card" data-prompt="How can I reduce sugar in my diet?">
+            <span>🍬</span> How do I cut down on sugar?
+          </button>
+        </div>
+      </div>
+
+      <div class="messages" id="messages"></div>
+    </section>
+
+    <form class="composer" id="composerForm">
+      <div class="composer-inner">
+        <input
+          type="text"
+          id="messageInput"
+          class="composer-input"
+          placeholder="Ask a nutrition question…"
+          autocomplete="off"
+          maxlength="2000"
+        />
+        <button type="submit" class="send-btn" id="sendBtn" aria-label="Send message">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 12L20 4L13 20L11 13L4 12Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <div class="composer-footnote">{{ chatbot_title }} answers {{ chatbot_domain }} questions only, and can make mistakes.</div>
+    </form>
+
+  </main>
+</div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
